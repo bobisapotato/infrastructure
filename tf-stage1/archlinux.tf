@@ -1051,6 +1051,12 @@ resource "hcloud_server" "gitlab" {
   }
 }
 
+resource "hcloud_floating_ip" "gitlab_pages" {
+  type = "ipv4"
+  description = "GitLab Pages"
+  server_id = hcloud_server.gitlab.id
+}
+
 resource "hcloud_volume" "gitlab" {
   name      = "gitlab"
   size      = 1000

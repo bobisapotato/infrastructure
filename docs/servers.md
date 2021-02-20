@@ -44,11 +44,6 @@
      the hosts vars and re-used the archusers role. Users
      in the phrik group are allowed to restar the irc bot.
 
-## dragon
-
-### Services
-  - build server
-
 ## state.archlinux.org
 
 ### Services
@@ -143,6 +138,12 @@ Medium-fast-ish packet.net Arch Linux box.
 ### Services
   - archwiki
 
+## md.archlinux.org
+
+  Online collborative markdwown editor for Arch Linux Staff.
+
+### Services
+  - [hedgedoc](https://hedgedoc.org/)
 
 ## Archive Mirrors
 

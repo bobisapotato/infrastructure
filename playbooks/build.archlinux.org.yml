@@ -1,13 +1,12 @@
 ---
 
-- name: setup dragon
-  hosts: dragon.archlinux.org
+- name: setup build.archlinux.org
+  hosts: build.archlinux.org
   remote_user: root
   roles:
     - { role: common }
     - { role: tools }
     - { role: sshd }
-    - { role: unbound }
     - { role: root_ssh }
     - { role: archusers }
     - { role: sudo, tags: ['archusers'] }

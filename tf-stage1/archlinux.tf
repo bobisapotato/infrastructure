@@ -36,7 +36,7 @@ locals {
   #
   # Valid parameters are:
   #   - server_type (mandatory)
-  #   - domain (mandatory)
+  #   - domain (optional, creates dns entry <domain>.archlinux.org pointing to the machine)
   #   - ttl (optional, applies to the dns entries)
   #   - zone (optionel, required for pkgbuild.com machines)
   #
@@ -81,7 +81,6 @@ locals {
     }
     "lists.archlinux.org" = {
       server_type = "cx11"
-      domain      = "lists"
     }
     "mail.archlinux.org" = {
       server_type = "cx11"
@@ -139,6 +138,10 @@ locals {
       server_type = "cx11"
       domain      = "mirror"
       zone        = hetznerdns_zone.pkgbuild.id
+    }
+    "md.archlinux.org" = {
+      server_type = "cx11"
+      domain      = "md"
     }
   }
 
@@ -219,9 +222,9 @@ locals {
       ipv4_address = "5.9.250.164"
       ipv6_address = "2a01:4f8:160:3033::2"
     }
-    dragon = {
-      ipv4_address = "195.201.167.210"
-      ipv6_address = "2a01:4f8:13a:102a::2"
+    build = {
+      ipv4_address = "135.181.138.48"
+      ipv6_address = "2a01:4f9:3a:120f::2"
     }
     gemini = {
       ipv4_address = "49.12.124.107"
@@ -490,4 +493,3 @@ resource "hcloud_volume" "homedir" {
   size      = 100
   server_id = hcloud_server.machine["homedir.archlinux.org"].id
 }
-

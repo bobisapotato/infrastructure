@@ -116,13 +116,6 @@ arch_users:
       - dev
       - tu
       - multilib
-  bpiotrowski:
-    name: "Bartłomiej Piotrowski"
-    ssh_key: bpiotrowski.pub
-    groups:
-      - dev
-      - tu
-      - multilib
   cbehan:
     name: "Connor Behan"
     ssh_key: cbehan.pub
@@ -214,7 +207,7 @@ arch_users:
     additional_ssh_keys:
       - name: foutrelis_buildhost.pub
         hosts:
-          - dragon.archlinux.org
+          - build.archlinux.org
     groups:
       - dev
       - tu
@@ -229,7 +222,7 @@ arch_users:
     ssh_key: foxxx0.pub
     shell: /bin/zsh
     groups:
-       - tu
+      - tu
   fukawi2:
     name: "Phillip Smith"
     ssh_key: fukawi2.pub

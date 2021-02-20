@@ -32,7 +32,7 @@ homeserver:
   # Default: true
   enablePresence: true
 
-  # Which port should the appservice bind to. Takes priority over the one provided in the
+  # Which port should the appservice bind to. Can be overriden by the one provided in the
   # command line! Optional.
   bindPort: 8499
 
@@ -43,15 +43,15 @@ homeserver:
 # Configuration specific to the IRC service
 ircService:
   servers:
-{% for address, settings in vault_matrix_secrets.irc_networks.items() %}
+{% for network in vault_matrix_secrets.irc_networks %}
     # The address of the server to connect to.
-    "{{ address }}":
+    "{{ network.address }}":
       # A human-readable short name. This is used to label IRC status rooms
       # where matrix users control their connections.
       # E.g. 'ExampleNet IRC Bridge status'.
       # It is also used in the Third Party Lookup API as the instance `desc`
       # property, where each server is an instance.
-      name: "{{ matrix_server_name }}—{{ settings.name }}"
+      name: "{{ matrix_server_name }}—{{ network.name }}"
 
       additionalAddresses: []
       #
@@ -67,7 +67,7 @@ ircService:
       # icon: https://example.com/images/hash.png
 
       # The port to connect to. Optional.
-      port: {{ settings.port }}
+      port: {{ network.port }}
       # Whether to use SSL or not. Default: false.
       ssl: true
       # Whether or not IRC server is using a self-signed cert or not providing CA Chain
@@ -139,11 +139,11 @@ ircService:
         #      See https://github.com/matrix-org/matrix-appservice-irc/issues/55
         enabled: true
         # The nickname to give the AS bot.
-        nick: "{{ settings.nick }}"
+        nick: "{{ network.nick }}"
         # The username to give to the AS bot. Defaults to "matrixbot"
-        username: "{{ settings.username }}"
+        username: "{{ network.username }}"
         # The password to give to NickServ or IRC Server for this nick. Optional.
-        password: "{{ settings.password }}"
+        password: "{{ network.password }}"
         #
         # Join channels even if there are no Matrix users on the other side of
         # the bridge. Set to false to prevent the bot from joining channels which have no
@@ -189,7 +189,7 @@ ircService:
         # This should be set to the same thing as namespaces.users.group_id in irc_registration.
         # This does not alter existing rooms.
         # Leaving this option empty will not set the event.
-        groupId: "+{{ settings.name }}:{{ matrix_server_name }}"
+        groupId: "+{{ network.name }}:{{ matrix_server_name }}"
         # Should created Matrix rooms be federated? If false, only users on the
         # HS attached to this AS will be able to interact with this room.
         # Default: true.
@@ -203,7 +203,7 @@ ircService:
         # $CHANNEL => The IRC channel (e.g. "#python")
         # This MUST have $CHANNEL somewhere in it.
         # Default: '#irc_$SERVER_$CHANNEL'
-        aliasTemplate: "#{{ settings.name }}_$CHANNEL"
+        aliasTemplate: "#{{ network.name }}_$CHANNEL"
         # A list of user IDs which the AS bot will send invites to in response
         # to a !join. Only applies if joinRule is 'invite'. Default: []
         # whitelist:
@@ -270,10 +270,10 @@ ircService:
         # 1:many mappings from IRC channels to room IDs on this IRC server.
         # The matrix room must already exist. Your matrix client should expose
         # the room ID in a "settings" page for the room.
-{% for channel, config in settings.mappings.items() %}
-        "{{ channel }}":
-          roomIds: ["{{ config.room }}"]
-          key: "{{ config.key }}"
+{% for mapping in network.mappings %}
+        "{{ mapping.channel }}":
+          roomIds: ["{{ mapping.room }}"]
+          key: "{{ mapping.key }}"
 {% endfor %}
 
       # Configuration for virtual matrix users. The following variables are
@@ -285,7 +285,7 @@ ircService:
         # MUST have $NICK somewhere in it.
         # Optional. Default: "@$SERVER_$NICK".
         # Example: "@irc.example.com_Alice:example.com"
-        userTemplate: "@{{ settings.name }}_$NICK"
+        userTemplate: "@{{ network.name }}_$NICK"
         # The display name to use for created matrix clients. This should have
         # $NICK somewhere in it if it is specified. Can also use $SERVER to
         # insert the IRC domain.
@@ -363,7 +363,16 @@ ircService:
         # so check before setting this value. Some modes may not work as intended
         # through the bridge e.g. caller ID as there is no way to /ACCEPT.
         # Default: "" (no user modes)
-        userModes: "{{ settings.user_modes }}"
+        userModes: "{{ network.user_modes }}"
+        # The format of the realname defined for users, either mxid or reverse-mxid
+        realnameFormat: "mxid"
+        # The minimum time to wait between connection attempts if we were disconnected
+        # due to throttling.
+        # pingTimeoutMs: 600000
+        # The rate at which to send pings to the IRCd if the client is being quiet for a while.
+        # Whilst the IRCd *should* be sending pings to us to keep the connection alive, it appears
+        # that sometimes they don't get around to it and end up ping timing us out.
+        # pingRateMs: 60000
 
 {% endfor %}
   # Set information about the bridged channel in the room state, so that client's may
@@ -494,6 +503,18 @@ ircService:
     # When handling lots of mode changes, wait this long before setting a power level
     # event in order to batch together changes
     # powerLevelGracePeriod: 1000
+
+  # Map of permissions from user/domain/wildcard to permission level.
+  # This is currently used to allow/disallow use of admin commands
+  # from the admin room but may be expanded in the future to contain more
+  # options. Currently, you may either set the value to be 'admin', or leave the key
+  # out to imply that the user does not have special permissions.
+  # UserID takes precedence over domain, which takes precedence over wildcard.
+  permissions:
+  # '*': admin
+  # 'matrix.org': admin
+  # '@fibble:matrix.org': admin
+    '@heftig:{{ matrix_server_name }}': admin
 
 # Options here are generally only applicable to large-scale bridges and may have
 # consequences greater than other options in this configuration file.

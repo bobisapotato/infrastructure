@@ -1,6 +1,5 @@
 [hetzner]
 luna.archlinux.org
-dragon.archlinux.org
 secure-runner1.archlinux.org
 gemini.archlinux.org
 
@@ -16,6 +15,9 @@ repro1.pkgbuild.com
 
 [mirrors]
 mirror.pkgbuild.com
+asia.mirror.pkgbuild.com
+america.mirror.pkgbuild.com
+europe.mirror.pkgbuild.com
 
 [archive_mirrors]
 asia.mirror.pkgbuild.com
@@ -43,6 +45,7 @@ mail.archlinux.org
 wiki.archlinux.org
 patchwork.archlinux.org
 security.archlinux.org
+md.archlinux.org
 
 [borg_hosts]
 prio.ch-s012.rsync.net
@@ -80,7 +83,7 @@ security.archlinux.org
 man.archlinux.org
 
 [buildservers]
-dragon.archlinux.org
+build.archlinux.org
 
 [gitlab_runners]
 runner1.archlinux.org
@@ -123,7 +126,7 @@ homedir.archlinux.org
 mail.archlinux.org
 matrix.archlinux.org
 bbs.archlinux.org
-dragon.archlinux.org
+build.archlinux.org
 bugs.archlinux.org
 gemini.archlinux.org
 luna.archlinux.org
@@ -137,6 +140,7 @@ america.mirror.pkgbuild.com
 europe.mirror.pkgbuild.com
 repro2.pkgbuild.com
 runner1.archlinux.org
+md.archlinux.org
 
 [kape_servers]
 asia.mirror.pkgbuild.com
